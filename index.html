@@ -101,7 +101,13 @@
             transform-style: preserve-3d;
         }
         
-        .voucher-card:hover .voucher-inner {
+        @media (hover: hover) and (pointer: fine) {
+            .voucher-card:hover .voucher-inner {
+                transform: rotateY(180deg);
+            }
+        }
+
+        .voucher-card.is-flipped .voucher-inner {
             transform: rotateY(180deg);
         }
         
@@ -176,7 +182,7 @@
         </h2>
         
         <p class="text-xl text-center mb-12" style="color: var(--text-secondary);">
-            鼠标悬停翻转卡片查看详情 ↓
+            鼠标悬停或手机点击卡片查看详情 ↓
         </p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -257,5 +263,28 @@
             </div>
         </div>
     </section>
+
+    <script>
+        const isTouchLike = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+        if (isTouchLike) {
+            const cards = document.querySelectorAll('.voucher-card');
+
+            cards.forEach((card) => {
+                card.addEventListener('click', () => {
+                    const alreadyFlipped = card.classList.contains('is-flipped');
+                    cards.forEach((item) => item.classList.remove('is-flipped'));
+                    if (!alreadyFlipped) {
+                        card.classList.add('is-flipped');
+                    }
+                });
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('.voucher-card')) {
+                    cards.forEach((card) => card.classList.remove('is-flipped'));
+                }
+            });
+        }
+    </script>
 </body>
 </html>
